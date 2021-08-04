@@ -1,15 +1,31 @@
 import React, { useState, useEffect } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 import "../styles/App.css";
 
 const App = () => {
   const [news, setNews] = useState([]);
+  const [page, setPage] = useState(2);
+  const [more, setMore] = useState(true);
 
   useEffect(() => {
     fetch("https://api.hnpwa.com/v0/news/1.json")
-      .then((res) => res.json())
-      .then((res) => setNews(res));
+      .then((response) => response.json())
+      .then((data) => setNews(data));
   }, []);
+
+  const fetchData = () => {
+    if (page <= 10) {
+      fetch(`https://api.hnpwa.com/v0/news/${page}.json`)
+        .then((response) => response.json())
+        .then((data) => {
+          setNews([...news, ...data]);
+          setPage(page + 1);
+        });
+    } else {
+      setMore(false);
+    }
+  };
 
   const compareValues = (key, order = "asc") => {
     return function innerSort(a, b) {
@@ -47,38 +63,50 @@ const App = () => {
   return (
     <>
       <h1>News</h1>
-      <table>
-        <thead>
-          <tr>
-            <th data-sort="asc" onClick={() => sortColumn("title")}>
-              Title
-            </th>
-            <th data-sort="asc" onClick={() => sortColumn("time")}>
-              Time
-            </th>
-            <th data-sort="asc" onClick={() => sortColumn("domain")}>
-              Domain
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {news.map((item, index) => (
-            <tr key={index}>
-              <td>{item.title}</td>
-              <td>
-                {new Date(item.time * 1000).toLocaleDateString("uk-UA", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                  hour: "numeric",
-                  minute: "numeric",
-                })}
-              </td>
-              <td>{item.domain}</td>
+      <InfiniteScroll
+        dataLength={news.length} //This is important field to render the next data
+        next={fetchData}
+        hasMore={more}
+        loader={<h4 style={{ textAlign: "center" }}>Loading...</h4>}
+        endMessage={
+          <p style={{ textAlign: "center" }}>
+            <b>Yay! You have seen it all</b>
+          </p>
+        }
+      >
+        <table>
+          <thead>
+            <tr>
+              <th data-sort="asc" onClick={() => sortColumn("title")}>
+                Title
+              </th>
+              <th data-sort="asc" onClick={() => sortColumn("time")}>
+                Time
+              </th>
+              <th data-sort="asc" onClick={() => sortColumn("domain")}>
+                Domain
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {news.map((item, index) => (
+              <tr key={index}>
+                <td>{item.title}</td>
+                <td>
+                  {new Date(item.time * 1000).toLocaleDateString("uk-UA", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    hour: "numeric",
+                    minute: "numeric",
+                  })}
+                </td>
+                <td>{item.domain}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </InfiniteScroll>
     </>
   );
 };
