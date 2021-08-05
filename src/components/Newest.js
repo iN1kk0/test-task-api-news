@@ -5,6 +5,14 @@ const Newest = () => {
   const [newest, setNewest] = useState([]);
   const [newestPage, setNewestPage] = useState(2);
   const [newestMore, setNewestMore] = useState(true);
+  const [width, setWidth] = useState(window.innerWidth);
+  const breakpoint = 600;
+
+  useEffect(() => {
+    const handleWindowResize = () => setWidth(window.innerWidth);
+    window.addEventListener("resize", handleWindowResize);
+    return () => window.removeEventListener("resize", handleWindowResize);
+  }, []);
 
   useEffect(() => {
     fetch("https://api.hnpwa.com/v0/newest/1.json")
@@ -58,9 +66,9 @@ const Newest = () => {
     }
   };
 
-  return (
+  return width > breakpoint ? (
     <InfiniteScroll
-      dataLength={newest.length} //This is important field to render the next data
+      dataLength={newest.length}
       next={fetchData}
       hasMore={newestMore}
       loader={<h4 style={{ textAlign: "center" }}>Loading...</h4>}
@@ -98,6 +106,35 @@ const Newest = () => {
                 })}
               </td>
               <td>{item.domain}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </InfiniteScroll>
+  ) : (
+    <InfiniteScroll
+      dataLength={newest.length}
+      next={fetchData}
+      hasMore={newestMore}
+      loader={<h4 style={{ textAlign: "center" }}>Loading...</h4>}
+      endMessage={
+        <p style={{ textAlign: "center" }}>
+          <b>Yay! You have seen it all</b>
+        </p>
+      }
+    >
+      <table>
+        <thead>
+          <tr>
+            <th data-sort="asc" onClick={() => sortColumn("title")}>
+              Title
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {newest.map((item, index) => (
+            <tr key={index}>
+              <td>{item.title}</td>
             </tr>
           ))}
         </tbody>

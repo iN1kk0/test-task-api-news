@@ -5,6 +5,14 @@ const News = () => {
   const [news, setNews] = useState([]);
   const [page, setPage] = useState(2);
   const [more, setMore] = useState(true);
+  const [width, setWidth] = useState(window.innerWidth);
+  const breakpoint = 600;
+
+  useEffect(() => {
+    const handleWindowResize = () => setWidth(window.innerWidth);
+    window.addEventListener("resize", handleWindowResize);
+    return () => window.removeEventListener("resize", handleWindowResize);
+  }, []);
 
   useEffect(() => {
     fetch("https://api.hnpwa.com/v0/news/1.json")
@@ -58,9 +66,9 @@ const News = () => {
     }
   };
 
-  return (
+  return width > breakpoint ? (
     <InfiniteScroll
-      dataLength={news.length} //This is important field to render the next data
+      dataLength={news.length}
       next={fetchData}
       hasMore={more}
       loader={<h4 style={{ textAlign: "center" }}>Loading...</h4>}
@@ -98,6 +106,35 @@ const News = () => {
                 })}
               </td>
               <td>{item.domain}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </InfiniteScroll>
+  ) : (
+    <InfiniteScroll
+      dataLength={news.length}
+      next={fetchData}
+      hasMore={more}
+      loader={<h4 style={{ textAlign: "center" }}>Loading...</h4>}
+      endMessage={
+        <p style={{ textAlign: "center" }}>
+          <b>Yay! You have seen it all</b>
+        </p>
+      }
+    >
+      <table>
+        <thead>
+          <tr>
+            <th data-sort="asc" onClick={() => sortColumn("title")}>
+              Title
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {news.map((item, index) => (
+            <tr key={index}>
+              <td>{item.title}</td>
             </tr>
           ))}
         </tbody>
