@@ -137,11 +137,16 @@ const News = () => {
         <tbody>
           {news.map((item, index) => (
             <tr key={index}>
-              <td><Link to={`/comment/${item.id}`}>{item.title}</Link></td>
+              <td>
+                <Link to={`/comment/${item.id}`}>{item.title}</Link>
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
+      <div onClick={() => sortColumn("time")} className="sortmobilebutton">
+        Sort by date
+      </div>
     </InfiniteScroll>
   );
 };

@@ -20,3 +20,21 @@ table {
   margin-right: auto;
   border-collapse: collapse;
 }
+
+td a {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.sortmobilebutton {
+  border: 1px solid #565656;
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  padding: 5px;
+  border-radius: 3px;
+  background: #929292;
+  color: white;
+}
