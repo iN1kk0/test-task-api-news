@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
+import { Link } from "react-router-dom";
 
 const Newest = () => {
   const [newest, setNewest] = useState([]);
@@ -95,7 +96,9 @@ const Newest = () => {
         <tbody>
           {newest.map((item, index) => (
             <tr key={index}>
-              <td>{item.title}</td>
+              <td>
+                <Link to={`/comment/${item.id}`}>{item.title}</Link>
+              </td>
               <td>
                 {new Date(item.time * 1000).toLocaleDateString("uk-UA", {
                   year: "numeric",

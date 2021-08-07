@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import News from "./News";
 import Newest from "./Newest";
 import { Menu } from "./Menu";
+import { Comments } from "./Comments";
 
 const App = () => {
   return (
@@ -13,6 +14,9 @@ const App = () => {
         <Switch>
           <Route path="/newest">
             <Newest />
+          </Route>
+          <Route path="/comment">
+            <Comments />
           </Route>
           <Route path="/">
             <News />
