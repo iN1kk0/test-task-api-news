@@ -137,7 +137,7 @@ const Newest = () => {
         <tbody>
           {newest.map((item, index) => (
             <tr key={index}>
-              <td>{item.title}</td>
+              <td><Link to={`/comment/${item.id}`}>{item.title}</Link></td>
             </tr>
           ))}
         </tbody>
