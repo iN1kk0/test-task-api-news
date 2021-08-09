@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
+import { useRouteMatch } from "react-router-dom";
+import "../styles/Comments.css";
 
 export const Comments = () => {
-  const pathArray = window.location.pathname.split("/");
-  const id = pathArray[2];
+  const { params } = useRouteMatch();
 
   const [currentcomments, setComments] = useState([]);
 
   useEffect(() => {
-    fetch(`https://api.hnpwa.com/v0/item/${id}.json`)
+    fetch(`https://api.hnpwa.com/v0/item/${params.id}.json`)
       .then((response) => response.json())
       .then((data) => setComments([data]));
   }, []);
@@ -17,7 +18,7 @@ export const Comments = () => {
       return <CommentsList key={comment.id} comment={comment} />;
     });
     return (
-      <ul style={{ margin: "10px", listStyle: "none" }}>
+      <ul className="comments">
         <li>
           <b>{comment.user}</b>
         </li>

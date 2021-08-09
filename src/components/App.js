@@ -1,28 +1,31 @@
 import React from "react";
-import "../styles/App.css";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  HashRouter,
+} from "react-router-dom";
 import News from "./News";
-import Newest from "./Newest";
 import { Menu } from "./Menu";
 import { Comments } from "./Comments";
 
 const App = () => {
   return (
     <>
-      <Router>
+      <HashRouter>
         <Menu />
         <Switch>
           <Route path="/newest">
-            <Newest />
+            <News cat="newest" />
           </Route>
-          <Route path="/comment">
+          <Route path="/comment/:id">
             <Comments />
           </Route>
           <Route path="/">
-            <News />
+            <News cat="news" />
           </Route>
         </Switch>
-      </Router>
+      </HashRouter>
     </>
   );
 };

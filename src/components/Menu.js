@@ -1,14 +1,15 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import "../styles/Menu.css";
 
 export const Menu = () => {
   return (
-    <nav style={{ textAlign: "center" }}>
-      <ul style={{ listStyle: "none" }}>
-        <li style={{ display: "inline", marginRight: "10px" }}>
+    <nav className="navigation">
+      <ul>
+        <li>
           <Link to="/">News</Link>
         </li>
-        <li style={{ display: "inline" }}>
+        <li>
           <Link to="/newest">Newest</Link>
         </li>
       </ul>

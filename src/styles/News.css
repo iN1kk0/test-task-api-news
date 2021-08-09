@@ -1,0 +1,50 @@
+table,
+th,
+td {
+  border: 1px solid lightgray;
+  padding: 5px;
+}
+
+th:hover {
+  cursor: pointer;
+  background-color: lightgray;
+}
+
+table {
+  margin-left: auto;
+  margin-right: auto;
+  border-collapse: collapse;
+}
+
+td a {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.sortmobilebutton {
+  display: none;
+}
+
+.loading {
+  text-align: center;
+}
+
+@media screen and (max-width: 600px) {
+  td:not(:first-child),
+  th:not(:first-child) {
+    display: none !important;
+  }
+  .sortmobilebutton {
+    border: 1px solid #565656;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    padding: 5px;
+    border-radius: 3px;
+    background: #929292;
+    color: white;
+    display: block;
+  }
+}

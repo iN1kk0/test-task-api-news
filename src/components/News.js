@@ -1,29 +1,22 @@
 import React, { useState, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Link } from "react-router-dom";
+import "../styles/News.css";
 
-const News = () => {
+const News = (props) => {
   const [news, setNews] = useState([]);
   const [page, setPage] = useState(2);
   const [more, setMore] = useState(true);
-  const [width, setWidth] = useState(window.innerWidth);
-  const breakpoint = 600;
 
   useEffect(() => {
-    const handleWindowResize = () => setWidth(window.innerWidth);
-    window.addEventListener("resize", handleWindowResize);
-    return () => window.removeEventListener("resize", handleWindowResize);
-  }, []);
-
-  useEffect(() => {
-    fetch("https://api.hnpwa.com/v0/news/1.json")
+    fetch(`https://api.hnpwa.com/v0/${props.cat}/1.json`)
       .then((response) => response.json())
       .then((data) => setNews(data));
-  }, []);
+  }, [props.cat]);
 
   const fetchData = () => {
     if (page <= 10) {
-      fetch(`https://api.hnpwa.com/v0/news/${page}.json`)
+      fetch(`https://api.hnpwa.com/v0/${props.cat}/${page}.json`)
         .then((response) => response.json())
         .then((data) => {
           setNews([...news, ...data]);
@@ -53,10 +46,9 @@ const News = () => {
     };
   };
 
-  const sortColumn = (key) => {
+  const sortColumn = (event, key) => {
     const sortedNews = [...news];
     const attrsort = event.target.getAttribute("data-sort");
-
     sortedNews.sort(compareValues(key, attrsort));
     setNews(sortedNews);
 
@@ -67,14 +59,14 @@ const News = () => {
     }
   };
 
-  return width > breakpoint ? (
+  return (
     <InfiniteScroll
       dataLength={news.length}
       next={fetchData}
       hasMore={more}
-      loader={<h4 style={{ textAlign: "center" }}>Loading...</h4>}
+      loader={<h4 className="loading">Loading...</h4>}
       endMessage={
-        <p style={{ textAlign: "center" }}>
+        <p className="loading">
           <b>Yay! You have seen it all</b>
         </p>
       }
@@ -82,13 +74,16 @@ const News = () => {
       <table>
         <thead>
           <tr>
-            <th data-sort="asc" onClick={() => sortColumn("title")}>
+            <th data-sort="asc" onClick={(event) => sortColumn(event, "title")}>
               Title
             </th>
-            <th data-sort="asc" onClick={() => sortColumn("time")}>
+            <th data-sort="asc" onClick={(event) => sortColumn(event, "time")}>
               Time
             </th>
-            <th data-sort="asc" onClick={() => sortColumn("domain")}>
+            <th
+              data-sort="asc"
+              onClick={(event) => sortColumn(event, "domain")}
+            >
               Domain
             </th>
           </tr>
@@ -113,38 +108,10 @@ const News = () => {
           ))}
         </tbody>
       </table>
-    </InfiniteScroll>
-  ) : (
-    <InfiniteScroll
-      dataLength={news.length}
-      next={fetchData}
-      hasMore={more}
-      loader={<h4 style={{ textAlign: "center" }}>Loading...</h4>}
-      endMessage={
-        <p style={{ textAlign: "center" }}>
-          <b>Yay! You have seen it all</b>
-        </p>
-      }
-    >
-      <table>
-        <thead>
-          <tr>
-            <th data-sort="asc" onClick={() => sortColumn("title")}>
-              Title
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {news.map((item, index) => (
-            <tr key={index}>
-              <td>
-                <Link to={`/comment/${item.id}`}>{item.title}</Link>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <div onClick={() => sortColumn("time")} className="sortmobilebutton">
+      <div
+        onClick={(event) => sortColumn(event, "time")}
+        className="sortmobilebutton"
+      >
         Sort by date
       </div>
     </InfiniteScroll>
